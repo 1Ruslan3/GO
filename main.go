@@ -1,23 +1,48 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+	"strconv"
+)
 
-type Rectangle struct {
-	Width, Height float64
-}
-
-func (r Rectangle) Area() float64 {
-	return r.Width * r.Height
-}
-
-func (r *Rectangle) Scale(factor float64) {
-	r.Width *= factor
-	r.Height *= factor
-}
 
 func main() {
-	rect := Rectangle{Width: 2, Height: 3}
-	fmt.Println(rect.Area())
-	rect.Scale(2)
-	fmt.Println(rect.Area())
+
+	if len(os.Args) != 2 {
+		fmt.Println("Please provide a command line argument")
+		return
+	}
+
+	argument := os.Args[1]
+	
+	switch argument{
+	case "0":
+		fmt.Println("0")
+	case "1":
+		fmt.Println("1")
+	case "2", "3", "4":
+		fmt.Println("2 or 3 or 4")
+		fallthrough
+	default:
+		fmt.Println("Value: ", argument)
+	}
+
+	value, err := strconv.Atoi(argument)
+	if err != nil {
+		fmt.Println("Cannot convert to int: ", argument)
+		return
+	}
+
+	switch {
+	case value == 0:
+		fmt.Println("0")
+	case value > 0:
+		fmt.Println("Positive integer")
+	case value < 0:
+		fmt.Println("Negative integer")
+	default:
+		fmt.Println("This should not happen: ", value)
+	}
+	
 }
