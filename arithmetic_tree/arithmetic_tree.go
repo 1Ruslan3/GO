@@ -64,14 +64,14 @@ func (n *Node) String() string {
 	if !n.IsOperator() {
 		return n.Value
 	}
-	return fmt.Sprintf("%s %s %s", n.Left.String(), n.Value, n.Right.String())
+	return fmt.Sprintf("(%s %s %s)", n.Left.String(), n.Value, n.Right.String())
 }
 
 // ParseExpression parses a string expression and builds an expression tree
 func ParseExpression(expr string) (*Node, error) {
 	// Remove all whitespace
 	expr = strings.ReplaceAll(expr, " ", "")
-	
+
 	// Find the operator with lowest precedence
 	lowestPrec := -1
 	lowestPos := -1
@@ -94,31 +94,32 @@ func ParseExpression(expr string) (*Node, error) {
 	}
 
 	if lowestPos == -1 {
-		// No operator found, check if it's a number or parenthesized expression
+		// Если оператор не найден, проверяем является ли выражение числом или выражением в скобках
 		if expr[0] == '(' && expr[len(expr)-1] == ')' {
+			// Если выражение в скобках - рекурсивно разбираем его содержимое без скобок
 			return ParseExpression(expr[1 : len(expr)-1])
 		}
-		// It's a number
+		// Если это не выражение в скобках, значит это число - создаем для него узел
 		return NewNode(expr), nil
 	}
 
 	// Create a node for the operator
 	node := NewNode(string(expr[lowestPos]))
-	
+
 	// Parse left and right subtrees
 	left, err := ParseExpression(expr[:lowestPos])
 	if err != nil {
 		return nil, err
 	}
-	
+
 	right, err := ParseExpression(expr[lowestPos+1:])
 	if err != nil {
 		return nil, err
 	}
-	
+
 	node.Left = left
 	node.Right = right
-	
+
 	return node, nil
 }
 
@@ -133,7 +134,7 @@ func main() {
 
 	for _, expr := range expressions {
 		fmt.Printf("\nExpression: %s\n", expr)
-		
+
 		// Parse and build the tree
 		root, err := ParseExpression(expr)
 		if err != nil {
@@ -152,4 +153,4 @@ func main() {
 		}
 		fmt.Printf("Result: %.2f\n", result)
 	}
-} 
+}
