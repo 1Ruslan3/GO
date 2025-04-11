@@ -17,4 +17,5 @@ func main() {
 	for name, age := range ages {
 		fmt.Printf("%s\t%d\n", name, age)
 	}
+
 }
